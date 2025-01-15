@@ -1,4 +1,5 @@
 import torch
+import numbers
 
 class GetMaskDimensions:
     def __init__(self):
@@ -75,6 +76,39 @@ class isMaskEmpty:
       isEmpty = is_mask_empty(mask)
       return (isEmpty,)  # Return the boolean value as a tuple
   
+class isImageEmpty:
+    def __init__(self):
+        pass
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "image": ("IMAGE",),  # IMAGE type is specific to ComfyUI inputs
+            }
+        }
+
+    RETURN_TYPES = ("BOOLEAN",)  # Return type expected by ComfyUI
+    RETURN_NAMES = ("is_empty",)  # Name of the returned value
+    FUNCTION = "execute"
+    CATEGORY = "accessories"  # Adjusted as per your request
+
+    def execute(self, image):
+        """
+        Check if the image is completely black (all pixel values are zero).
+        Assumes the image is a torch tensor in CHW format.
+        """
+        import torch  # Ensure torch is imported within the function's scope
+
+        if not isinstance(image, torch.Tensor):
+            raise TypeError("The input 'image' must be a torch.Tensor.")
+
+        # Check if all pixel values in the tensor are zero
+        is_empty = torch.all(image == 0.0).item()
+
+        return (is_empty,)  # Return a tuple as required by ComfyUI
+
+
 import random
 
 class GetRandomDimensions:
@@ -118,3 +152,60 @@ class GetRandomDimensions:
         #return width, height
         return {"ui": {"text": text},
                 "result": (width, height, text)}
+
+# wildcard trick is taken from pythongossss's
+class AnyType(str):
+    def __ne__(self, __value: object) -> bool:
+        return False
+
+ANY_TYPE = AnyType("*")
+
+def try_cast(x, dst_type: str):
+    result = x
+    if dst_type == "STRING":
+        result = str(x)
+    elif dst_type == "INT":
+        result = int(x)
+    elif dst_type == "FLOAT" or dst_type == "NUMBER":
+        result = float(x)
+    elif dst_type == "BOOLEAN":
+        if isinstance(x, numbers.Number):
+            if x > 0:
+                result = True
+            else:
+                result = False
+        elif isinstance(x, str):
+            try:
+                x = float(x)
+                if x > 0:
+                    result = True
+                else:
+                    result = False
+            except:
+                result = bool(x)
+        else:
+            result = bool(x)
+    return result
+
+
+class AnyCast:
+    def __init__(self):
+        pass
+
+    @classmethod
+    def INPUT_TYPES(self):
+        return {
+            "required": {
+                "ANY" : (ANY_TYPE, {}),
+                "TYPE": (["*", "STRING", "INT", "FLOAT", "BOOLEAN", "IMAGE", "LATENT", "MASK", "NOISE", "SAMPLER", "SIGMAS", "GUIDER", "MODEL", "CLIP", "VAE", "CONDITIONING"], {}),
+            },
+        }
+    
+    TITLE = "Any Cast"
+    RETURN_TYPES = (ANY_TYPE, )
+    FUNCTION = "run"
+    CATEGORY = "Accessories"
+
+    def run(self, ANY, TYPE):
+        result = try_cast(ANY, TYPE)
+        return (result, )
