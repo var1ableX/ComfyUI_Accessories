@@ -1,4 +1,4 @@
-from .unmasked import GetMaskDimensions, isMaskEmpty, GetRandomDimensions, AnyCast, isImageEmpty, AccMakeListNode
+from .nodes import GetMaskDimensions, isMaskEmpty, GetRandomDimensions, AnyCast, isImageEmpty, AccMakeListNode
 
 # Node class mappings
 NODE_CLASS_MAPPINGS = {
