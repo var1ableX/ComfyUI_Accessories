@@ -1,4 +1,4 @@
-from .unmasked import GetMaskDimensions, isMaskEmpty, GetRandomDimensions, AnyCast, isImageEmpty
+from .unmasked import GetMaskDimensions, isMaskEmpty, GetRandomDimensions, AnyCast, isImageEmpty, AccMakeListNode
 
 # Node class mappings
 NODE_CLASS_MAPPINGS = {
@@ -6,7 +6,8 @@ NODE_CLASS_MAPPINGS = {
     "isMaskEmpty": isMaskEmpty,
     "GetRandomDimensions": GetRandomDimensions,
     "ACC_AnyCast": AnyCast,
-    "isImageEmpty": isImageEmpty
+    "isImageEmpty": isImageEmpty,
+    "AccMakeListNode": AccMakeListNode
 }
 
 # Node display name mappings
@@ -15,7 +16,8 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "isMaskEmpty": "Is Mask Empty",
     "GetRandomDimensions": "Get Random Dimensions",
     "ACC_AnyCast": "Any Cast",
-    "isImageEmpty": "Is Image Empty"
+    "isImageEmpty": "Is Image Empty",
+    "AccMakeListNode": "Make List From Text",
 }
 
 WEB_DIRECTORY = "./web"

@@ -209,3 +209,29 @@ class AnyCast:
     def run(self, ANY, TYPE):
         result = try_cast(ANY, TYPE)
         return (result, )
+    
+class AccMakeListNode:
+    def __init__(self):
+        pass
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {"required": {
+            "text": ("STRING", {"multiline": True})
+        }}
+
+    NAME = "Make List from String"
+    RETURN_NAMES = ("list", "lines count")
+    RETURN_TYPES = ("STRING", "INT")
+    FUNCTION = "make_list"
+    OUTPUT_IS_LIST = (True, False)
+    CATEGORY = "Accessories"
+
+    def make_list(self, **kwargs):
+        text = kwargs.get('text', None)
+        list = []
+        if text is not None:
+            lines = text.splitlines()
+            list = [line.strip() for line in lines if line.strip()]
+        count = len(list)
+        return (lines, count, )
