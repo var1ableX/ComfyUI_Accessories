@@ -53,30 +53,31 @@ function addNewColors() {
 
 
 // Function to enhance nodes with text display
-function addTextDisplay(nodeType) {
-  const onNodeCreated = nodeType.prototype.onNodeCreated;
-  nodeType.prototype.onNodeCreated = function () {
-    const r = onNodeCreated?.apply(this, arguments);
-    const w = ComfyWidgets["STRING"](this, "display", ["STRING", { multiline: true, placeholder: " " }], app).widget;
-    w.inputEl.readOnly = true;
-    w.inputEl.style.opacity = 0.7;
-    w.inputEl.style.cursor = "auto";
-    return r;
-  };
+//IMPORTANT: This function is disabled because it is somehow breaking Note nodes. Needs further investigation.
+// function addTextDisplay(nodeType) {
+//   const onNodeCreated = nodeType.prototype.onNodeCreated;
+//   nodeType.prototype.onNodeCreated = function () {
+//     const r = onNodeCreated?.apply(this, arguments);
+//     const w = ComfyWidgets["STRING"](this, "display", ["STRING", { multiline: true, placeholder: " " }], app).widget;
+//     w.inputEl.readOnly = true;
+//     w.inputEl.style.opacity = 0.7;
+//     w.inputEl.style.cursor = "auto";
+//     return r;
+//   };
 
-  const onExecuted = nodeType.prototype.onExecuted;
-  nodeType.prototype.onExecuted = function (message) {
-    onExecuted?.apply(this, arguments);
+//   const onExecuted = nodeType.prototype.onExecuted;
+//   nodeType.prototype.onExecuted = function (message) {
+//     onExecuted?.apply(this, arguments);
 
-    for (const widget of this.widgets) {
-      if (widget.type === "customtext" && widget.name === "display" && widget.inputEl.readOnly === true) {
-        widget.value = message.text.join('');
-      }
-    }
+//     for (const widget of this.widgets) {
+//       if (widget.type === "customtext" && widget.name === "display" && widget.inputEl.readOnly === true) {
+//         widget.value = message.text.join('');
+//       }
+//     }
 
-    this.onResize?.(this.size);
-  };
-}
+//     this.onResize?.(this.size);
+//   };
+// }
 
 app.registerExtension({
   name: "rka.GetRandomDimensions",
@@ -97,10 +98,10 @@ app.registerExtension({
      });
     // Call the function to add new colors
     //addNewColors();
-  },
+  }/*,
   async beforeRegisterNodeDef(nodeType, nodeData, app) {
     if (["GetRandomDimensions"].includes(nodeData.name)) {
       addTextDisplay(nodeType);
     }
-  },
+  },*/
 });

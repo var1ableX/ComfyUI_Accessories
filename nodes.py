@@ -108,51 +108,6 @@ class isImageEmpty:
 
         return (is_empty,)  # Return a tuple as required by ComfyUI
 
-
-import random
-
-class GetRandomDimensions:
-    def __init__(self):
-        self.is_changed_enabled = True
-
-    @classmethod
-    def INPUT_TYPES(s):
-        return {
-            "required": {
-                "min_width": ("INT", {"default": 768, "step": 16, "display": "number"}),
-                "min_height": ("INT", {"default": 768, "step": 16, "display": "number"}),
-                "max_width": ("INT", {"default": 1280, "step": 16, "display": "number"}),
-                "max_height": ("INT", {"default": 1280, "step": 16, "display": "number"}),
-                "randomize": ("BOOLEAN", {"default": False}),
-            }
-        }
-
-    RETURN_TYPES = ("INT", "INT")
-    RETURN_NAMES = ("width", "height",)
-    FUNCTION = "execute"
-    CATEGORY = "image"
-    OUTPUT_NODE = True
-
-    def execute(self, min_width, min_height, max_width, max_height, randomize   ):
-        def get_random_dimensions(min_val, max_val):
-            min_div_16 = min_val // 16
-            max_div_16 = max_val // 16
-            if min_div_16 > max_div_16:
-                raise ValueError("No numbers in the specified range are divisible by 16.")
-            return random.randint(min_div_16, max_div_16) * 16
-
-        if randomize:
-            width = get_random_dimensions(min_width, max_width)
-            height = get_random_dimensions(min_height, max_height)
-        else:
-            width, height = max_width, max_height
-        
-        # Setting the resolution string
-        text = f"{width}x{height}"
-        #return width, height
-        return {"ui": {"text": text},
-                "result": (width, height, text)}
-
 # wildcard trick is taken from pythongossss's
 class AnyType(str):
     def __ne__(self, __value: object) -> bool:
